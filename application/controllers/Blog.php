@@ -1,7 +1,9 @@
 <?php
 
-class Blog extends CI_Controller {
-    function __construct() {
+class Blog extends CI_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('database');
         $this->_postconfig = [
@@ -19,7 +21,8 @@ class Blog extends CI_Controller {
     }
 
     // Index page
-    function index($start = 0) {
+    public function index($start = 0)
+    {
         $data['posts'] = $this->database->get_posts(5, $start);
 
         // Pagination
@@ -35,12 +38,13 @@ class Blog extends CI_Controller {
     }
 
     // Search results page
-    function search($query = '') {
-        $query = $query != '' ? $query : $this->input->get('query', TRUE);
+    public function search($query = '')
+    {
+        $query = $query != '' ? $query : $this->input->get('query', true);
 
         $data = [
             'posts' => [],
-            'pages' => NULL,
+            'pages' => null,
             'query' => $query,
             'active' => 'search'
         ];
@@ -53,7 +57,8 @@ class Blog extends CI_Controller {
     }
 
     // Single post page
-    function post($post_id) {
+    public function post($post_id)
+    {
         $this->load->model('comment');
         $data['comments'] = $this->comment->get_comment($post_id);
         $data['post'] = $this->database->get_post($post_id);
@@ -63,8 +68,9 @@ class Blog extends CI_Controller {
     }
 
     // New post page
-    function new_post() {
-        // When the user is not an admin and authors
+    public function new_post()
+    {
+        // When the user is not an admin and author
         if (!$this->check_permissions('author')) {
             return redirect(base_url('users/login'));
         }
@@ -79,7 +85,7 @@ class Blog extends CI_Controller {
         ];
         if ($this->input->post()) {
             $this->form_validation->set_rules($this->_postconfig);
-            if ($this->form_validation->run() == FALSE) {
+            if ($this->form_validation->run() == false) {
                 $data['errors'] = $this->form_validation->error_array();
             } else {
                 $input = [
@@ -98,7 +104,8 @@ class Blog extends CI_Controller {
     }
 
     // Edit post page
-    function edit_post($post_id) {
+    public function edit_post($post_id)
+    {
         // When the user is not an admin and author
         if (!$this->check_permissions('author')) {
             return redirect(base_url('users/login'));
@@ -110,12 +117,12 @@ class Blog extends CI_Controller {
             'title' => '',
             'description' => '',
             'active' => 'edit_post',
-            'success' => FALSE,
+            'success' => false,
             'errors' => []
         ];
         if ($this->input->post()) {
             $this->form_validation->set_rules($this->_postconfig);
-            if ($this->form_validation->run() == FALSE) {
+            if ($this->form_validation->run() == false) {
                 $data['errors'] = $this->form_validation->error_array();
             } else {
                 $input = [
@@ -125,7 +132,7 @@ class Blog extends CI_Controller {
                     'comments' => (bool) $this->input->post('comments')
                 ];
                 $this->database->update_post($post_id, $input);
-                $data['success'] = TRUE;
+                $data['success'] = true;
             }
         }
 
@@ -134,7 +141,8 @@ class Blog extends CI_Controller {
     }
 
     // Delete post page
-    function delete_post($post_id) {
+    public function delete_post($post_id)
+    {
         // When the user is not an admin and author
         if (!$this->check_permissions('author')) {
             return redirect(base_url('users/login'));
@@ -145,7 +153,8 @@ class Blog extends CI_Controller {
     }
 
     // Checking current user's permission
-    function check_permissions($required) {
+    public function check_permissions($required)
+    {
         $user_type = $this->session->userdata('user_type'); // Current user
 
         if ($required == 'user') {
