@@ -64,7 +64,7 @@ class Blog extends CI_Controller {
 
     // New post page
     function new_post() {
-        // When the user is not an admin and author
+        // When the user is not an admin and authors
         if (!$this->check_permissions('author')) {
             return redirect(base_url('users/login'));
         }
